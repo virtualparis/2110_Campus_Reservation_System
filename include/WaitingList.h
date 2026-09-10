@@ -5,9 +5,9 @@
 #include <string>
 
 struct WaitingRequest {
-    std::string studentId;
+    int studentId;
     std::string studentName;
-    std::string resourceId;
+    int resourceId;
 };
 
 class WaitingList {
