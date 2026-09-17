@@ -1,4 +1,4 @@
-# 2110_Reservation_System
+# Campus Resource Reservation System
 Campus Resource Reservation System that allows users to reserve campus resources, manage waiting lists, track reservation history, and generate reports.
 # Description
 In this C++ program, students can make a reservation with their student name and student ID to reserve any of the following resources: study rooms, laptops, calculators, lab equipment, tutoring appointments. The system uses OOP principles to manage reservations with data read from an input file and user-input.
