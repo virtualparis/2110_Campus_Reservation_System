@@ -15,14 +15,12 @@ bool CancellationManager::createReservation(
     string resourceName,
     string reservationDate)
 {
-    // Check if the resource is already reserved.
     if (activeReservations.hasResource(resourceID))
     {
         cout << "Resource is already reserved." << endl;
         return false;
     }
 
-    // Check if the student already has this resource.
     if (activeReservations.hasStudentReservation(
             studentID, resourceID))
     {
@@ -57,9 +55,6 @@ bool CancellationManager::cancelReservation(
     int reservationID,
     Reservation& cancelledReservation)
 {
-    // Remove the reservation from the active list.
-    // The complete reservation is returned through
-    // cancelledReservation.
     if (!activeReservations.removeReservation(
             reservationID, cancelledReservation))
     {
@@ -75,22 +70,12 @@ bool CancellationManager::cancelReservation(
 bool CancellationManager::canRestoreReservation(
     const Reservation& reservation) const
 {
-    /*
-       Before restoring a cancelled reservation,
-       make sure its resource is not currently
-       assigned to another student.
-    */
-
     if (activeReservations.hasResource(
             reservation.getResourceID()))
     {
         return false;
     }
 
-    /*
-       Also make sure the student does not already
-       have the same resource reservation.
-    */
     if (activeReservations.hasStudentReservation(
             reservation.getStudentID(),
             reservation.getResourceID()))
@@ -104,11 +89,6 @@ bool CancellationManager::canRestoreReservation(
 bool CancellationManager::restoreReservation(
     const Reservation& reservation)
 {
-    /*
-       IMPORTANT:
-       Check whether restoration is possible BEFORE
-       the cancellation is removed from the stack.
-    */
     if (!canRestoreReservation(reservation))
     {
         cout << "Cannot restore reservation." << endl;
@@ -117,13 +97,7 @@ bool CancellationManager::restoreReservation(
 
         return false;
     }
-
-    /*
-       Put the original reservation back into the
-       active reservation linked list.
-       This also restores the original reservation
-       date and other information.
-    */
+    
     if (activeReservations.insertReservation(reservation))
     {
         cout << "Reservation restored successfully."
