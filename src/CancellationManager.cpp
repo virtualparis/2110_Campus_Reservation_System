@@ -10,7 +10,7 @@ CancellationManager::CancellationManager()
 
 bool CancellationManager::createReservation(
     int studentID,
-    int resourceID,
+    string resourceID,
     string studentName,
     string resourceName,
     string reservationDate)
@@ -97,7 +97,7 @@ bool CancellationManager::restoreReservation(
 
         return false;
     }
-    
+
     if (activeReservations.insertReservation(reservation))
     {
         cout << "Reservation restored successfully."
@@ -127,7 +127,7 @@ bool CancellationManager::reservationExists(
 }
 
 bool CancellationManager::resourceReserved(
-    int resourceID) const
+    string resourceID) const
 {
     return activeReservations.hasResource(resourceID);
 }
