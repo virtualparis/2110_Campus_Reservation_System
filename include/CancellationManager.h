@@ -13,7 +13,7 @@ public:
     CancellationManager();
 
     bool createReservation(int studentID,
-                           int resourceID,
+                           string resourceID,
                            string studentName,
                            string resourceName,
                            string reservationDate);
@@ -31,7 +31,7 @@ public:
 
     bool reservationExists(int reservationID) const;
 
-    bool resourceReserved(int resourceID) const;
+    bool resourceReserved(string resourceID) const;
 };
 
 #endif
