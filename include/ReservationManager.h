@@ -1,42 +1,46 @@
-// header file for ReservationManager class
-
-// define the ReservationManager class if it has not been defined yet
 #ifndef RESERVATION_MANAGER_H
 #define RESERVATION_MANAGER_H
 
 #include <list>
 #include <string>
+
 #include "CancellationHistory.h"
+#include "Reservation.h"
+#include "Resources.h"
 #include "WaitingList.h"
 
-// class definition for ReservationManager
 class ReservationManager {
+private:
+    std::list<Reservation> activeReservations;
+    CancellationHistory cancellationHistory;
+    WaitingList waitingList;
+    int nextReservationID = 1;
 
-    private:
-        std::list<Reservation> activeReservations; // linked list of active reservations
-        CancellationHistory cancellationHistory; // stack of cancelled reservations
-        WaitingList waitingList; // queue of students waiting for a reservation
+    void assignNextStudentForResource(
+        const std::string& resourceID);
 
-    public:
-        // loading the reservations from a file
-        void loadReservations(const std::string& filename);
+public:
+    void loadResources(const std::string& filename);
+    void loadReservations(const std::string& filename);
 
-        // creating a reservation, cancelling a reservation, and undoing a cancellation
-        void createReservation(int reservationID, int studentID, int resourceID,
-                               const std::string& studentName,
-                               const std::string& resourceName,
-                               const std::string& reservationDate);
-        void cancelReservation(int reservationID);
-        void undoCancellation();
+    void createReservation(int reservationID, int studentID,
+                           const std::string& resourceID,
+                           const std::string& studentName,
+                           const std::string& reservationDate);
 
-        // searching for a reservation by ID and displaying all active reservations
-        Reservation* findReservationByID(int reservationID);
+    void cancelReservation(int reservationID);
+    void undoCancellation();
 
-        // displaying the active reservations, cancellation history, and waiting list
-        void displayActiveReservations() const;
-        void displayCancellationHistory() const;
-        void displayWaitingList() const;
+    Reservation* findReservationByID(int reservationID);
 
+    void displayResources() const;
+    void displayActiveReservations() const;
+    void displayCancellationHistory() const;
+    void displayWaitingList() const;
+
+    void sortResourcesByName();
+    void sortResourcesByType();
+    void sortResourcesByStatus();
 };
 
 #endif

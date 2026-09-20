@@ -1,6 +1,5 @@
 #include "../include/WaitingList.h"
 #include <iostream>
-#include <queue>
 
 void WaitingList::addStudent(const WaitingRequest& request) {
     requests.push(request);
@@ -16,9 +15,32 @@ bool WaitingList::removeNextStudent(WaitingRequest& request) {
     return true;
 }
 
+bool WaitingList::removeNextStudentForResource(
+    const std::string& resourceId,
+    WaitingRequest& request) {
+
+    std::queue<WaitingRequest> remainingRequests;
+    bool found = false;
+
+    while (!requests.empty()) {
+        WaitingRequest current = requests.front();
+        requests.pop();
+
+        if (!found && current.resourceId == resourceId) {
+            request = current;
+            found = true;
+        } else {
+            remainingRequests.push(current);
+        }
+    }
+
+    requests = remainingRequests;
+    return found;
+}
+
 void WaitingList::displayWaitingList() const {
     if (requests.empty()) {
-        std::cout << "Waiting list is empty." << std::endl;
+        std::cout << "Waiting list is empty.\n";
         return;
     }
 
@@ -30,7 +52,7 @@ void WaitingList::displayWaitingList() const {
         std::cout << "Student ID: " << request.studentId
                   << ", Name: " << request.studentName
                   << ", Resource ID: " << request.resourceId
-                  << std::endl;
+                  << '\n';
 
         copy.pop();
     }
