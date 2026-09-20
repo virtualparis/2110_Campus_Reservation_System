@@ -8,6 +8,7 @@ view current reservations, and search for reservations.
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <cctype>
 using namespace std;
 
 // validate if a string is a number
@@ -57,14 +58,15 @@ void ReservationManager::loadReservations(const string& filename) {
         }
 
         // converting string to int for reservationID, studentID, and resourceID
-        int reservationID = strToInt(reservationID);
-        int studentID = strToInt(studentID);
-        int resourceID = strToInt(resourceID);
+        int reservationIdValue = strToInt(reservationID);
+        int studentIdValue = strToInt(studentID);
+        int resourceIdValue = strToInt(resourceID);
 
         string resourceName = "";
 
         // reservation object to create a new reservation and add it to the active reservations list
-        Reservation reservation(reservationID, studentID, resourceID, studentName, resourceName, reservationDate);
+        Reservation reservation(reservationIdValue, studentIdValue, resourceIdValue,
+                    studentName, resourceName, reservationDate);
         activeReservations.push_back(reservation);
     }
 }
@@ -87,7 +89,7 @@ void ReservationManager::cancelReservation(int reservationID) {
     for (auto it = activeReservations.begin(); it != activeReservations.end(); ++it) {
         if (it->getReservationID() == reservationID) {
 
-            cancelHistory.addCancelledReservation(*it);
+            cancellationHistory.addCancelledReservation(*it);
 
             WaitingRequest req;
             req.studentId = it->getStudentID();
@@ -106,13 +108,13 @@ void ReservationManager::cancelReservation(int reservationID) {
 
 // undo the last cancellation by popping from the cancellation history stack and adding it back to the active reservations list
 void ReservationManager::undoCancellation() {
-    if (cancelHistory.isEmpty()) {
+    if (cancellationHistory.isEmpty()) {
         cout << "No cancellations to undo.\n";
         return;
     }
 
     Reservation restored;
-    if (cancelHistory.undoCancellation(restored)) {
+    if (cancellationHistory.undoCancellation(restored)) {
         activeReservations.push_back(restored);
     }
 }
@@ -126,7 +128,7 @@ Reservation* ReservationManager::findReservationByID(int reservationID) {
 }
 
 // display all active reservations, waiting list, and cancellation history
-void ReservationManager::displayAllReservations() const {
+void ReservationManager::displayActiveReservations() const {
     for (const auto& reservation : activeReservations) {
         reservation.display();
         cout << "-------------------------\n";
@@ -138,5 +140,5 @@ void ReservationManager::displayWaitingList() const {
 }
 
 void ReservationManager::displayCancellationHistory() const {
-    cancelHistory.displayCancellationHistory();
+    cancellationHistory.displayCancellationHistory();
 }
