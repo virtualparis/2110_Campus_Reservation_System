@@ -1,28 +1,21 @@
 #include "Reservation.h"
 #include <iostream>
 
-using namespace std;
-
 Reservation::Reservation()
+    : reservationID(0), studentID(0), resourceID(""),
+      studentName(""), resourceName(""), reservationDate("")
 {
-    reservationID = 0;
-    studentID = 0;
-    resourceID = 0;
-    studentName = "";
-    resourceName = "";
-    reservationDate = "";
 }
 
-Reservation::Reservation(int reservationID, int studentID, int resourceID,
-                         string studentName, string resourceName,
-                         string reservationDate)
+Reservation::Reservation(int reservationID, int studentID,
+                         const std::string resourceID,
+                         const std::string studentName,
+                         const std::string resourceName,
+                         const std::string reservationDate)
+    : reservationID(reservationID), studentID(studentID),
+      resourceID(resourceID), studentName(studentName),
+      resourceName(resourceName), reservationDate(reservationDate)
 {
-    this->reservationID = reservationID;
-    this->studentID = studentID;
-    this->resourceID = resourceID;
-    this->studentName = studentName;
-    this->resourceName = resourceName;
-    this->reservationDate = reservationDate;
 }
 
 int Reservation::getReservationID() const
@@ -35,32 +28,32 @@ int Reservation::getStudentID() const
     return studentID;
 }
 
-int Reservation::getResourceID() const
+std::string Reservation::getResourceID() const
 {
     return resourceID;
 }
 
-string Reservation::getStudentName() const
+std::string Reservation::getStudentName() const
 {
     return studentName;
 }
 
-string Reservation::getResourceName() const
+std::string Reservation::getResourceName() const
 {
     return resourceName;
 }
 
-string Reservation::getReservationDate() const
+std::string Reservation::getReservationDate() const
 {
     return reservationDate;
 }
 
 void Reservation::display() const
 {
-    cout << "Reservation ID: " << reservationID << endl;
-    cout << "Student ID: " << studentID << endl;
-    cout << "Student Name: " << studentName << endl;
-    cout << "Resource ID: " << resourceID << endl;
-    cout << "Resource Name: " << resourceName << endl;
-    cout << "Reservation Date: " << reservationDate << endl;
+    std::cout << "Reservation ID: " << reservationID << std::endl;
+    std::cout << "Student ID: " << studentID << std::endl;
+    std::cout << "Student Name: " << studentName << std::endl;
+    std::cout << "Resource ID: " << resourceID << std::endl;
+    std::cout << "Resource Name: " << resourceName << std::endl;
+    std::cout << "Reservation Date: " << reservationDate << std::endl;
 }
