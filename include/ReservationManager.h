@@ -6,8 +6,6 @@
 
 #include <list>
 #include <string>
-// include code from other header files here pls dontforget paris
-#include "Reservation.h"
 #include "CancellationHistory.h"
 #include "WaitingList.h"
 
@@ -32,7 +30,7 @@ class ReservationManager {
         void undoCancellation();
 
         // searching for a reservation by ID and displaying all active reservations
-        Reservation* searchReservation(int reservationID);
+        Reservation* findReservationByID(int reservationID);
 
         // displaying the active reservations, cancellation history, and waiting list
         void displayActiveReservations() const;
