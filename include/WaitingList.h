@@ -7,7 +7,7 @@
 struct WaitingRequest {
     int studentId;
     std::string studentName;
-    int resourceId;
+    std::string resourceId;
 };
 
 class WaitingList {
@@ -17,6 +17,12 @@ private:
 public:
     void addStudent(const WaitingRequest& request);
     bool removeNextStudent(WaitingRequest& request);
+
+    // Gets the first student waiting for one specific resource.
+    bool removeNextStudentForResource(
+        const std::string& resourceId,
+        WaitingRequest& request);
+
     void displayWaitingList() const;
     bool isEmpty() const;
 };
