@@ -26,6 +26,7 @@ private:
 public:
     void displayMostRequestedResources() const;
     void displayWaitingListStatistics() const;
+    void displayResourceUtilization() const;
     void loadResources(const std::string& filename);
     void loadReservations(const std::string& filename);
 

@@ -1,4 +1,6 @@
 #include "ReservationManager.h"
+#include <map>
+#include <iomanip>
 
 #include <cctype>
 #include <fstream>
@@ -116,15 +118,15 @@ void ReservationManager::createReservation(
         return;
     }
 
-    activeReservations.emplace_back(
-        reservationID, studentID, resourceID, studentName,
-        resource->getresourceName(), reservationDate);
+   activeReservations.emplace_back(
+    reservationID, studentID, resourceID, studentName,
+    resource->getresourceName(), reservationDate);
 
     resource->setAvailabilityStatus("Unavailable");
-    if (countRequest)
-    {
-        ++requestCounts[resourceID];
-    }
+
+if (countRequest) {
+    ++requestCounts[resourceID];
+}
 
     if (reservationID >= nextReservationID) {
         nextReservationID = reservationID + 1;
@@ -306,4 +308,30 @@ void ReservationManager::displayMostRequestedResources() const {
 
 void ReservationManager::displayWaitingListStatistics() const {
     waitingList.displayStatistics();
+}
+void ReservationManager::displayResourceUtilization() const {
+    std::map<std::string, int> reservationCounts;
+
+    for (const auto& reservation : activeReservations) {
+        reservationCounts[reservation.getResourceID()]++;
+    }
+
+    std::cout << std::left
+              << std::setw(15) << "Resource ID"
+              << std::setw(25) << "Resource Name"
+              << "Reservations\n";
+
+    std::cout << std::string(55, '-') << "\n";
+
+    for (const auto& resource : Resource::resources) {
+        std::string id = resource.getresourceID();
+
+        std::cout << std::left
+                  << std::setw(15) << id
+                  << std::setw(25) << resource.getresourceName()
+                  << reservationCounts[id] << "\n";
+    }
+
+    std::cout << "\nTotal Active Reservations: "
+              << activeReservations.size() << "\n";
 }
