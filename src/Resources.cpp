@@ -1,10 +1,68 @@
 #include "Resources.h"
-#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 
 std::vector<Resource> Resource::resources;
+
+// merge sort comparison to return true if a is before b
+using LessThan = bool (*)(const Resource&, const Resource&);
+
+// helper to sort by resource name
+bool byName(const Resource& a, const Resource& b) {
+    return a.getresourceName() < b.getresourceName();
+}
+
+// helper to sort by resource type
+bool byType(const Resource& a, const Resource& b) {
+    return a.getresourceType() < b.getresourceType();
+}
+
+// helper to sort by availability status
+bool byStatus(const Resource& a, const Resource& b) {
+    return a.getavailabilityStatus() < b.getavailabilityStatus();
+}
+
+// merge sort for sorted data halves
+void mergeRanges(std::vector<Resource>& list, std::size_t left, std::size_t mid, std::size_t right, LessThan lessThan) {
+    std::vector<Resource> temp;
+    temp.reserve(right - left);
+
+    std::size_t i = left;
+    std::size_t j = mid;
+
+    while (i < mid && j < right) {
+        if (lessThan(list[j], list[i])) {
+            temp.push_back(list[j++]);
+        }
+        else {
+            temp.push_back(list[i++]);
+        }
+    }
+    while (i < mid) {
+        temp.push_back(list[i++]);
+    }
+    while (j < right) {
+        temp.push_back(list[j++]);
+    }
+
+    for (std::size_t k = 0; k < temp.size(); ++k) {
+        list[left + k] = temp[k];
+    }
+}
+
+// merge sort
+void mergeSort(std::vector<Resource>& list, std::size_t left, std::size_t right, LessThan lessThan) {
+    if (right - left < 2) {
+        return;
+    }
+
+    std::size_t mid = left + (right - left) / 2;
+
+    mergeSort(list, left, mid, lessThan);
+    mergeSort(list, mid, right, lessThan);
+    mergeRanges(list, left, mid, right, lessThan);
+}
 
 Resource::Resource(const std::string& id, const std::string& name,
                    const std::string& type, const std::string& status)
@@ -87,23 +145,30 @@ Resource* Resource::searchByID(const std::string& id) {
 }
 
 void Resource::sortByName() {
-    std::sort(resources.begin(), resources.end(),
-              [](const Resource& a, const Resource& b) {
-                  return a.getresourceName() < b.getresourceName();
-              });
+    mergeSort(resources, 0, resources.size(), byName);
 }
 
 void Resource::sortByType() {
-    std::sort(resources.begin(), resources.end(),
-              [](const Resource& a, const Resource& b) {
-                  return a.getresourceType() < b.getresourceType();
-              });
+    mergeSort(resources, 0, resources.size(), byType);
 }
 
 void Resource::sortByStatus() {
-    std::sort(resources.begin(), resources.end(),
-              [](const Resource& a, const Resource& b) {
-                  return a.getavailabilityStatus() <
-                         b.getavailabilityStatus();
-              });
+    mergeSort(resources, 0, resources.size(), byStatus);
+}
+
+int Resource::getReservationCount() const {
+    return reservationCount;
+}
+
+void Resource::incrementReservationCount() {
+    ++reservationCount;
+}
+
+void Resource::displayReport(int count) const {
+    std::cout << "Resource ID: " << resourceID << '\n';
+    std::cout << "Resource Name: " << resourceName << '\n';
+    std::cout << "Resource Type: " << resourceType << '\n';
+    std::cout << "Availability: " << availabilityStatus << '\n';
+    std::cout << "Total Reservations: " << reservationCount << '\n';
+    std::cout << "Active Reservations: " << count << '\n';
 }
