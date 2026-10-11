@@ -9,6 +9,7 @@ view current reservations, and search for reservations.
 #include <fstream>
 #include <iostream>
 #include <cctype>
+#include <string>
 using namespace std;
 
 // validate if a string is a number
@@ -72,14 +73,14 @@ void ReservationManager::loadReservations(const string& filename) {
 }
 
 // create a new reservation and add it to the active reservations list
-void ReservationManager::createReservation(int reservationID, int studentID,
-                                           int resourceID,
+void ReservationManager::createReservation(int reservationID,
+                                           int studentID,
                                            const string& studentName,
+                                           const string& resourceID,
                                            const string& resourceName,
-                                           const string& date) {
+                                           const string& reservationDate) {
 
-    Reservation reservation(reservationID, studentID, resourceID,
-                  studentName, resourceName, date);
+    Reservation reservation(reservationID, studentID, studentName, resourceID, resourceName, reservationDate);
 
     activeReservations.push_back(reservation);
 }
@@ -94,7 +95,8 @@ void ReservationManager::cancelReservation(int reservationID) {
             WaitingRequest req;
             req.studentId = it->getStudentID();
             req.studentName = it->getStudentName();
-            req.resourceId = it->getResourceID();
+            req.resourceId = to_string(it->getResourceID());
+            req.reservationDate = it->getReservationDate();
 
             waitingList.addStudent(req);
 
@@ -109,7 +111,7 @@ void ReservationManager::cancelReservation(int reservationID) {
 // undo the last cancellation by popping from the cancellation history stack and adding it back to the active reservations list
 void ReservationManager::undoCancellation() {
     if (cancellationHistory.isEmpty()) {
-        cout << "No cancellations to undo.\n";
+        cout << "No cancellation to undo.\n";
         return;
     }
 
@@ -131,7 +133,7 @@ Reservation* ReservationManager::findReservationByID(int reservationID) {
 void ReservationManager::displayActiveReservations() const {
     for (const auto& reservation : activeReservations) {
         reservation.display();
-        cout << "-------------------------\n";
+        cout << "====================" << endl;
     }
 }
 

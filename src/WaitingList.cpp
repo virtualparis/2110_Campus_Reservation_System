@@ -30,6 +30,7 @@ void WaitingList::displayWaitingList() const {
         std::cout << "Student ID: " << request.studentId
                   << ", Name: " << request.studentName
                   << ", Resource ID: " << request.resourceId
+                  << ", Reservation Date: " << request.reservationDate
                   << std::endl;
 
         copy.pop();

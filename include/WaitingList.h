@@ -6,8 +6,10 @@
 
 struct WaitingRequest {
     int studentId;
+    int reservationId;
     std::string studentName;
-    int resourceId;
+    std::string resourceId;
+    std::string reservationDate;
 };
 
 class WaitingList {
