@@ -19,6 +19,7 @@ In this C++ program, students can make a reservation with their student name and
 - **Merge Sort** - O(n log n), used to manually sort of unsorted data.
 
 ## Project Structure
+```
 project/
 ├── include/
 │   ├── CancellationHistory.h
@@ -37,6 +38,7 @@ project/
 │   ├── resources.txt
 │   └── reservations.txt
 └── README.md
+```
 
 ## Known Limitations
 - Data is not saved to reservation or resource files, so changes only exist for the current run.
