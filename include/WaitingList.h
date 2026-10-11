@@ -24,6 +24,7 @@ public:
         WaitingRequest& request);
 
     void displayWaitingList() const;
+    void displayStatistics() const;
     bool isEmpty() const;
 };
 

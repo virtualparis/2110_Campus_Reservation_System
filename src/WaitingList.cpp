@@ -1,5 +1,6 @@
 #include "../include/WaitingList.h"
 #include <iostream>
+#include <map>
 
 void WaitingList::addStudent(const WaitingRequest& request) {
     requests.push(request);
@@ -60,4 +61,48 @@ void WaitingList::displayWaitingList() const {
 
 bool WaitingList::isEmpty() const {
     return requests.empty();
+}
+void WaitingList::displayStatistics() const {
+    std::cout << "Total waiting requests: "
+              << requests.size() << '\n';
+
+    if (requests.empty()) {
+        std::cout << "No students are waiting.\n";
+        return;
+    }
+
+    // Inspect a copy to preserve the original queue order.
+    std::queue<WaitingRequest> copy = requests;
+    std::map<std::string, std::size_t> counts;
+
+    while (!copy.empty()) {
+        ++counts[copy.front().resourceId];
+        copy.pop();
+    }
+
+    std::cout << "Resources with waiting requests: "
+              << counts.size() << '\n';
+
+    std::size_t longestQueue = 0;
+
+    for (const auto& entry : counts) {
+        std::cout << "Resource " << entry.first
+                  << ": " << entry.second
+                  << " waiting request(s)\n";
+
+        if (entry.second > longestQueue) {
+            longestQueue = entry.second;
+        }
+    }
+
+    std::cout << "Longest waiting list: "
+              << longestQueue << " request(s)\n";
+
+    std::cout << "Resource(s) with the longest waiting list:\n";
+
+    for (const auto& entry : counts) {
+        if (entry.second == longestQueue) {
+            std::cout << "  " << entry.first << '\n';
+        }
+    }
 }

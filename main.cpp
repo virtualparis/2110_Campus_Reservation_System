@@ -125,6 +125,14 @@ int main() {
 
             std::cout << "\n--- Cancellation History ---\n";
             manager.displayCancellationHistory();
+
+            std::cout << "\n--- Most Requested Resources ---\n";
+            manager.displayMostRequestedResources();
+
+            std::cout << "\n--- Waiting-List Statistics ---\n";
+            manager.displayWaitingListStatistics();
+
+
         }
         else if (choice != 9) {
             std::cout << "Invalid menu choice.\n";
