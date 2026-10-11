@@ -18,11 +18,13 @@ public:
     void addStudent(const WaitingRequest& request);
     bool removeNextStudent(WaitingRequest& request);
 
+    // Gets the first student waiting for one specific resource.
     bool removeNextStudentForResource(
         const std::string& resourceId,
         WaitingRequest& request);
 
     void displayWaitingList() const;
+    void displayStatistics() const;
     bool isEmpty() const;
 };
 

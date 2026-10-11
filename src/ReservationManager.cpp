@@ -84,7 +84,8 @@ void ReservationManager::createReservation(
     int reservationID, int studentID,
     const std::string& resourceID,
     const std::string& studentName,
-    const std::string& reservationDate) {
+    const std::string& reservationDate,
+    bool countRequest) {
 
     if (findReservationByID(reservationID) != nullptr) {
         std::cout << "Reservation ID already exists.\n";
@@ -105,6 +106,10 @@ void ReservationManager::createReservation(
         request.resourceId = resourceID;
 
         waitingList.addStudent(request);
+        if (countRequest) 
+        {
+            ++requestCounts[resourceID];
+        }
 
         std::cout << "Resource is unavailable. Student added "
                   << "to the waiting list.\n";
@@ -116,6 +121,10 @@ void ReservationManager::createReservation(
         resource->getresourceName(), reservationDate);
 
     resource->setAvailabilityStatus("Unavailable");
+    if (countRequest)
+    {
+        ++requestCounts[resourceID];
+    }
 
     if (reservationID >= nextReservationID) {
         nextReservationID = reservationID + 1;
@@ -156,7 +165,8 @@ void ReservationManager::cancelReservation(int reservationID) {
 }
 
 void ReservationManager::assignNextStudentForResource(
-    const std::string& resourceID) {
+    const std::string& resourceID) 
+    {
 
     WaitingRequest nextStudent;
 
@@ -170,11 +180,12 @@ void ReservationManager::assignNextStudentForResource(
               << nextStudent.studentName << '\n';
 
     createReservation(
-        nextReservationID,
-        nextStudent.studentId,
-        nextStudent.resourceId,
-        nextStudent.studentName,
-        "Assigned after cancellation");
+    nextReservationID,
+    nextStudent.studentId,
+    nextStudent.resourceId,
+    nextStudent.studentName,
+    "Assigned after cancellation",
+    false);
 }
 
 void ReservationManager::undoCancellation() {
@@ -250,4 +261,49 @@ void ReservationManager::sortResourcesByType() {
 
 void ReservationManager::sortResourcesByStatus() {
     Resource::sortByStatus();
+}
+void ReservationManager::displayMostRequestedResources() const {
+    std::cout << "Reporting period: this program run.\n"
+              << "Counts new accepted reservation and waiting-list "
+              << "requests only.\n";
+
+    if (requestCounts.empty()) {
+        std::cout << "No new requests recorded yet.\n";
+        return;
+    }
+
+    std::size_t highestCount = 0;
+    std::size_t totalRequests = 0;
+
+    for (const auto& entry : requestCounts) {
+        totalRequests += entry.second;
+
+        if (entry.second > highestCount) {
+            highestCount = entry.second;
+        }
+    }
+
+    std::cout << "Total accepted requests: "
+              << totalRequests << '\n';
+
+    std::cout << "\nRequests by resource:\n";
+
+    for (const auto& entry : requestCounts) {
+        std::cout << "Resource " << entry.first
+                  << ": " << entry.second << " request(s)\n";
+    }
+
+    // Display every resource tied for the highest count.
+    std::cout << "\nMost requested resource(s):\n";
+
+    for (const auto& entry : requestCounts) {
+        if (entry.second == highestCount) {
+            std::cout << "Resource " << entry.first
+                      << ": " << entry.second << " request(s)\n";
+        }
+    }
+}
+
+void ReservationManager::displayWaitingListStatistics() const {
+    waitingList.displayStatistics();
 }
