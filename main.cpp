@@ -120,6 +120,9 @@ int main() {
             std::cout << "\n--- Active Reservations ---\n";
             manager.displayActiveReservations();
 
+            std::cout << "\n--- Resource Utilization ---\n";
+            manager.displayResourceUtilization();
+
             std::cout << "\n--- Waiting List ---\n";
             manager.displayWaitingList();
 
