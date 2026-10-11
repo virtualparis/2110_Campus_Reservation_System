@@ -6,12 +6,16 @@
 
 class Resource {
 private:
+    int reservationCount = 0;
     std::string resourceID;
     std::string resourceName;
     std::string resourceType;
     std::string availabilityStatus;
 
 public:
+int getReservationCount() const;
+void incrementReservationCount();
+void displayReport(int count) const;
     Resource(const std::string& id = "",
              const std::string& name = "",
              const std::string& type = "",
